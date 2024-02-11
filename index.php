@@ -7,6 +7,14 @@ $img64Vue = "/assets/images/MiseEnSituation/VueDefaut.jpg";
 $flip = "false";
 $mode = "proportionnel";
 
+
+if (!isset($_SESSION['premierChargement'])) { // à implémenter
+    $_SESSION['premierChargement'] = true;
+} else {
+    $_SESSION['premierChargement'] = false;
+}
+
+
 // chargement du mode 
 if (isset($_POST["mode"])) {
     $_SESSION["mode"] = $_POST["mode"];
