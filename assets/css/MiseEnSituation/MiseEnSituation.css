@@ -1,4 +1,4 @@
-/****Couleurs bouttons Adjustem*****************************************/
+/****Couleurs bouttons *****************************************/
 * {
   --primary1: #0056b3;
   --primary2: #2780b0;
@@ -6,11 +6,37 @@
   -webkit-user-select: none; /* Chrome, Safari, Opéra depuis la version 15 */
   -ms-user-select: none; /* Internet explorer depuis la version 10 et Edge */
   user-select: none; /* Propriété standard */
+  /*background-color: lightgray;*/
 
 }
 p {
   color:var(--primary2);
 }
+
+
+.badge-primary {
+  background-color: var(--primary2);
+  border-color: var(--primary1);
+}
+
+
+.badge-primary:hover,
+.badge-primary.disabled:hover {
+  background-color: var(--primary1);
+  border-color: var(--primary1);
+}
+
+.badge-primary:disabled {
+  background-color: var(--primary2);
+  border-color: var(--primary1);
+}
+
+.badge-primary:focus {
+  border-color: var(--primary2);
+  border-color: var(--primary1);
+}
+
+/**************************/
 
 .btn-primary {
   background-color: var(--primary2);
@@ -39,6 +65,13 @@ p {
 .btn-primary:focus {
   border-color: var(--primary2);
   border-color: var(--primary1);
+}
+
+/*********************************/
+
+
+.btn-dot {
+  border-color: black;
 }
 
 /****Custom input-file************************************************/
@@ -87,6 +120,23 @@ p {
 #mention {
   border-radius: .25rem;
 }
+
+#pmenuiserie {
+  margin-bottom: 5px;
+}
+
+#pbatiment {
+  margin-bottom: 5px;
+}
+
+#pmode {
+  margin-bottom: 5px;
+}
+
+#pmention {
+  margin-bottom: 5px;
+}
+
 
 #img_obj {
 
@@ -144,6 +194,12 @@ p {
   border-color:#9aa7b4;
 }
 
+.tooltip-inner {
+  background-color: #2780b0;
+  box-shadow: 0px 0px 4px black;
+  opacity: 1 !important;
+
+}
 
 
 @media screen and (min-width: 300px) 

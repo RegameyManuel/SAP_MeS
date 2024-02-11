@@ -35,6 +35,8 @@ var mesObjets = [];                // mesObjets est le conteneur des objets dess
 
 var couleurFond;
 
+var aide = false;
+
 /* Raccourcis vers les boutons */
 var btnFlip = document.getElementById("btnFlip");
 var btnProp = document.getElementById("btnProp");
@@ -104,6 +106,13 @@ var browserName = (function (agent) {
   }
 })(window.navigator.userAgent.toLowerCase());
 
+/********************************************************************************************************************/
+/*                                           Activation tooltips                                              */
+/********************************************************************************************************************/
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
 
 
 /********************************************************************************************************************/
@@ -160,10 +169,61 @@ window.addEventListener("load", () => {
   activemention(false);
   btnExport.disabled = true; // impossible d'exporter la mise en situation tant qu'aucun objet n'a ete pose dessus
   couleurFond = "#343a40";
+  //$('#element').tooltip('disable');//désactivation des tooltips
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip('disable')
+  })
 });
 
+/**************************    activation/désactivation des tooltips    **************************/
 
+document.getElementById("aide").addEventListener("click", function () {
+  aide = !aide;
 
+  if (aide)
+  {
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip('enable')
+    })
+    document.getElementById("aide").style.color =  "lime";
+  } 
+  else 
+  {
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip('disable')
+    })
+    document.getElementById("aide").style.color =  "white";
+  };
+});
+
+/********************************************************************************************************************/
+/*                                             Gestion de l'export de menuiserie                                    */
+/********************************************************************************************************************/
+
+document.getElementById("btnExportObj").addEventListener("click", function () {
+  setcanvasMenuiserie();
+
+  let maintenant = new Date();
+
+  let canvaFinal = canvas1
+    .toDataURL("image/jpeg", 1)
+    .replace("imageVue/jpeg", "image/octet-stream");
+
+  var link = document.createElement("a");
+  link.setAttribute("id", "windowVue");
+  link.setAttribute("href", canvaFinal);
+  link.setAttribute(
+    "download",
+    "Menuiserie" +
+      maintenant.toLocaleDateString("fr") +
+      "-" +
+      maintenant.getHours() +
+      "h" +
+      maintenant.getMinutes() +
+      "m"
+  );
+  link.click();
+});
 
 /********************************************************************************************************************/
 /*                                             Gestion des inputs                                                   */
@@ -571,14 +631,13 @@ function handleEnd(evt) {
   /* fin de la selection */
   if (!isParPoint) {
     delRectangle();
-    selection = false;
 
     if (drawned) {
       chargeVide(imageVue.src);
       drawned = false;
     }
 
-    if (window.scrollY === 0) {
+    if ((window.scrollY === 0) && (selection)) {
       xEnd = evt.changedTouches[0].clientX - getOffset(canvas0).left;
       yEnd = evt.changedTouches[0].clientY - getOffset(canvas0).top;
 
@@ -591,6 +650,7 @@ function handleEnd(evt) {
       );
     }
   }
+  selection = false;
 }
 
 
@@ -702,14 +762,13 @@ canvas0.onmousedown = function (e) {
 canvas0.onmouseup = function () {
   if (!isParPoint) {
     delRectangle();
-    selection = false;
 
     if (drawned) {
       chargeVide(imageVue.src);
       drawned = false;
     }
 
-    if (window.scrollY === 0) {
+    if ((window.scrollY === 0) && (selection)) {
       xEnd = xMousePos;
       yEnd = yMousePos;
 
@@ -722,6 +781,7 @@ canvas0.onmouseup = function () {
       );
     }
   }
+  selection = false;
 };
 
 
@@ -1518,7 +1578,13 @@ function setcanvas1() {
   ctx1.drawImage(canvas0, 0, 0);
 }
 
-
+function setcanvasMenuiserie() {
+  canvas1.width = imageObj.width;
+  canvas1.height = imageObj.height;
+  canvas1.top = imageObj.top;
+  canvas1.left = imageObj.left;
+  ctx1.drawImage(imageObj, 0, 0);
+}
 
 /********************************************************************************************************************/
 /*                                      Fonctions de manipulation de l'image                                        */
@@ -1546,7 +1612,6 @@ function detourage(monImage) {
   var i,j,k;
   var meslignes = [];
   var mescolonnes = [];
-  var mespixels = [];
 
 
   for ( i = 0; i < tmpImgData.length; i += monImage.naturalWidth * 4) { // cette boucle permet de parcourir chaque ligne de pixels de l'image
@@ -1608,9 +1673,10 @@ function transparence(monImage) {
   var tmpImgData = tmpMap.data; //creation d'un raccourci vers les datas
 
   for (var i = 0; i < tmpImgData.length; i += 4) {
-    if (tmpImgData[i] > transValue) {
-      if (tmpImgData[i + 1] > transValue) {
-        if (tmpImgData[i + 2] > transValue) {
+    
+    if (tmpImgData[i] >= transValue ) {
+      if (tmpImgData[i + 1] >= transValue ) {
+        if (tmpImgData[i + 2] >= transValue ) {
           tmpImgData[i] = 0;
           tmpImgData[i + 1] = 0;
           tmpImgData[i + 2] = 0;
